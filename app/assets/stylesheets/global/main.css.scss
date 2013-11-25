@@ -1,6 +1,27 @@
-.example-orbit {
-  li img {
+.carousel {
+  overflow: hidden;
+  position:relative;
+  height: 400px;
+  li {
+    list-style-type: none;
+    left: 110%;
+    position: absolute;
     width: 100%;
+    top: 0;
+    z-index: 1;
+    &.animate {
+      -webkit-transition: left 2s;
+      transition: left 2s;
+    }
+    &.show {
+      left: 0;
+    }
+    &.front {
+      z-index: 99;
+    }
+    img {
+      width: 100%;
+    }
   }
 }
 
