@@ -1,4 +1,4 @@
-EmberOrbit::Application.routes.draw do
+EmberCarousel::Application.routes.draw do
   root to: 'application#index'
 
   get '*parms', to: 'application#index'

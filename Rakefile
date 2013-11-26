@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-EmberOrbit::Application.load_tasks
+EmberCarousel::Application.load_tasks
