@@ -14,9 +14,7 @@ App.SlideCarouselComponent = Ember.Component.extend
 
   showElement: (newElementToShow) ->
     oldElement = @get 'shownElement'
-    newElementToShow.addClass 'front'
-    newElementToShow.addClass 'animate'
-    newElementToShow.addClass 'show'
+    newElementToShow.addClass 'front animate show'
     @removeElement(oldElement)
     @set 'shownElement', newElementToShow
 
@@ -26,8 +24,7 @@ App.SlideCarouselComponent = Ember.Component.extend
       Ember.run.later(
         oldElement,
         ->
-          @removeClass 'animate'
-          @toggleClass 'show'
+          @removeClass 'animate show'
         , @get('interval') * 0.6
       )
 
