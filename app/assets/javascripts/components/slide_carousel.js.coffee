@@ -41,6 +41,8 @@ App.SlideCarouselComponent = Ember.Component.extend
         if shown?
           nextSibling = $('~ li', shown).first()
           if nextSibling.length == 0
+            nextSibling = @$('[data-loop]').first()
+          if nextSibling.length == 0
             nextSibling = @$('li:first')
           @showElement(nextSibling)
           @nextElement()
