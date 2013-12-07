@@ -8,6 +8,7 @@ App.SlideCarouselComponent = Ember.Component.extend
 
   didInsertElement: ->
     console.info 'Did insert carousel'
+    @set 'shownElement', null
     firstItem = @$('li:first')
     @showElement(firstItem)
     @nextElement()
@@ -28,16 +29,21 @@ App.SlideCarouselComponent = Ember.Component.extend
         , @get('interval') * 0.6
       )
 
+  willDestroyElement: ->
+    console.info "Will destroy carousel"
+    @set 'shownElement', null
+
   nextElement: ->
     Ember.run.later(
       this,
       ->
         shown = @get('shownElement')
-        nextSibling = $('~ li', shown).first()
-        if nextSibling.length == 0
-          nextSibling = @$('li:first')
-        @showElement(nextSibling)
-        @nextElement()
+        if shown?
+          nextSibling = $('~ li', shown).first()
+          if nextSibling.length == 0
+            nextSibling = @$('li:first')
+          @showElement(nextSibling)
+          @nextElement()
       , @get 'interval'
     )
 
