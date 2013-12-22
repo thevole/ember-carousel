@@ -6,6 +6,30 @@ App.SlideCarouselComponent = Ember.Component.extend
 
   shownElement: null
 
+  isPaused: false
+
+  pauseMode: (->
+    if @get('isPaused')
+      "Play"
+    else
+      "Pause"
+  ).property('isPaused')
+
+  actions: {
+    togglePause: ->
+      @set 'isPaused', (not @get 'isPaused')
+  }
+
+  resume: (->
+    if not @get('isPaused')
+      @nextElement()
+    else
+      timer_id = @get 'runLater'
+      if timer_id?
+        Ember.run.cancel timer_id
+        @set 'runLater', null
+  ).observes('isPaused')
+
   didInsertElement: ->
     console.info 'Did insert carousel'
     @set 'shownElement', null
@@ -33,8 +57,10 @@ App.SlideCarouselComponent = Ember.Component.extend
     console.info "Will destroy carousel"
     @set 'shownElement', null
 
+  runLater: null
+
   nextElement: ->
-    Ember.run.later(
+    timer_id = Ember.run.later(
       this,
       ->
         shown = @get('shownElement')
@@ -48,4 +74,4 @@ App.SlideCarouselComponent = Ember.Component.extend
           @nextElement()
       , @get 'interval'
     )
-
+    @set 'runLater', timer_id

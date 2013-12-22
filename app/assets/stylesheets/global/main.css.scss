@@ -23,6 +23,21 @@
       width: 100%;
     }
   }
+
+  .playpause {
+    z-index: 1000;
+    position: absolute;
+    top: 85%;
+    left: 10px;
+    font-size: 0.8em;
+    -webkit-transition: color 1s;
+    transition: color 1s;
+    color: #222;
+    &:hover {
+      color: white;
+    }
+
+  }
 }
 
 none {
