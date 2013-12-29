@@ -6,5 +6,7 @@
   <div {{bind-attr class=":play-pause isPaused:paused"}}
   {{action 'togglePause'}}
   ><span></span></div>
-  <div class="next"><span></span></div>
+  <div class="next" 
+    {{action 'nextSlide'}}
+    ><span></span></div>
 </div>

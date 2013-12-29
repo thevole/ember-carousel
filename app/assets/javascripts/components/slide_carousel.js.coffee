@@ -18,16 +18,26 @@ App.SlideCarouselComponent = Ember.Component.extend
   actions: {
     togglePause: ->
       @set 'isPaused', (not @get 'isPaused')
+
+    nextSlide: ->
+      console.log 'next slide'
+      @set 'isPaused', true
+      @clear_timer()
+      @showElement(@nextSibling())
+      @nextElement()
   }
+
+  clear_timer: ->
+    timer_id = @get 'runLater'
+    if timer_id?
+      Ember.run.cancel timer_id
+      @set 'runLater', null
 
   resume: (->
     if not @get('isPaused')
       @nextElement()
     else
-      timer_id = @get 'runLater'
-      if timer_id?
-        Ember.run.cancel timer_id
-        @set 'runLater', null
+      @clear_timer()
   ).observes('isPaused')
 
   didInsertElement: ->
@@ -59,19 +69,24 @@ App.SlideCarouselComponent = Ember.Component.extend
 
   runLater: null
 
+  nextSibling: ->
+    shown = @get('shownElement')
+    nextSibling = $('~ li', shown).first()
+    if nextSibling.length == 0
+      nextSibling = @$('[data-loop]').first()
+    if nextSibling.length == 0
+      nextSibling = @$('li:first')
+    nextSibling
+
   nextElement: ->
     timer_id = Ember.run.later(
       this,
       ->
         shown = @get('shownElement')
         if shown?
-          nextSibling = $('~ li', shown).first()
-          if nextSibling.length == 0
-            nextSibling = @$('[data-loop]').first()
-          if nextSibling.length == 0
-            nextSibling = @$('li:first')
-          @showElement(nextSibling)
+          @showElement(@nextSibling())
           @nextElement()
       , @get 'interval'
     )
     @set 'runLater', timer_id
+
