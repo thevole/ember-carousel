@@ -2,7 +2,9 @@
 {{yield}}
 </ul>
 <div class="controls-container">
-  <div class="prev"><span></span></div>
+  <div class="prev"
+    {{action 'prevSlide'}}
+    ><span></span></div>
   <div {{bind-attr class=":play-pause isPaused:paused"}}
   {{action 'togglePause'}}
   ><span></span></div>

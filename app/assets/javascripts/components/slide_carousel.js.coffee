@@ -21,10 +21,17 @@ App.SlideCarouselComponent = Ember.Component.extend
 
     nextSlide: ->
       console.log 'next slide'
+      next = @nextSibling()
       @set 'isPaused', true
       @clear_timer()
-      @showElement(@nextSibling())
-      @nextElement()
+      @showElement(next)
+
+    prevSlide: ->
+      console.log 'prev slide'
+      prev = @prevSibling()
+      @set 'isPaused', true
+      @clear_timer()
+      @showElement(prev)
   }
 
   clear_timer: ->
@@ -47,6 +54,7 @@ App.SlideCarouselComponent = Ember.Component.extend
     @showElement(firstItem)
     @nextElement()
 
+
   showElement: (newElementToShow) ->
     oldElement = @get 'shownElement'
     newElementToShow.addClass 'front animate show'
@@ -68,6 +76,11 @@ App.SlideCarouselComponent = Ember.Component.extend
     @set 'shownElement', null
 
   runLater: null
+
+  prevSibling: ->
+    shown = @get('shownElement')
+    prevSibling = $(shown).prev()
+    prevSibling
 
   nextSibling: ->
     shown = @get('shownElement')
