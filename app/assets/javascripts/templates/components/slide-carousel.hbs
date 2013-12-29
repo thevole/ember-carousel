@@ -1,4 +1,10 @@
 <ul>
 {{yield}}
 </ul>
-<button class="tiny radius button playpause" {{action 'togglePause'}}>{{pauseMode}}</button>
+<div class="controls-container">
+  <div class="prev"><span></span></div>
+  <div {{bind-attr class=":play-pause isPaused:paused"}}
+  {{action 'togglePause'}}
+  ><span></span></div>
+  <div class="next"><span></span></div>
+</div>
