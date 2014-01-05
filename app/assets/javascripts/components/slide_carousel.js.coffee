@@ -9,10 +9,7 @@ App.SlideCarouselComponent = Ember.Component.extend
   isPaused: false
 
   pauseMode: (->
-    if @get('isPaused')
-      "Play"
-    else
-      "Pause"
+    if @get('isPaused') then "Play" else "Pause"
   ).property('isPaused')
 
   actions: {
@@ -20,18 +17,18 @@ App.SlideCarouselComponent = Ember.Component.extend
       @set 'isPaused', (not @get 'isPaused')
 
     nextSlide: ->
-      console.log 'next slide'
       next = @nextSibling()
-      @set 'isPaused', true
+      # @set 'isPaused', true
       @clear_timer()
       @showElement(next)
+      @nextElement()
 
     prevSlide: ->
-      console.log 'prev slide'
       prev = @prevSibling()
-      @set 'isPaused', true
+      # @set 'isPaused', true
       @clear_timer()
       @showElement(prev)
+      @nextElement()
   }
 
   clear_timer: ->
@@ -48,7 +45,7 @@ App.SlideCarouselComponent = Ember.Component.extend
   ).observes('isPaused')
 
   didInsertElement: ->
-    console.info 'Did insert carousel'
+    # console.info 'Did insert carousel'
     @set 'shownElement', null
     firstItem = @$('li:first')
     @showElement(firstItem)
@@ -56,8 +53,10 @@ App.SlideCarouselComponent = Ember.Component.extend
 
 
   showElement: (newElementToShow) ->
+    # console.log "Showing #{$(newElementToShow).attr('id')}"
     oldElement = @get 'shownElement'
     newElementToShow.addClass 'front animate show'
+    # console.log "Removing #{$(oldElement).attr('id')}"
     @removeElement(oldElement)
     @set 'shownElement', newElementToShow
 
@@ -67,12 +66,12 @@ App.SlideCarouselComponent = Ember.Component.extend
       Ember.run.later(
         oldElement,
         ->
-          @removeClass 'animate show'
+          @removeClass 'animate show' unless $('.show').length == 1
         , @get('interval') * 0.6
       )
 
   willDestroyElement: ->
-    console.info "Will destroy carousel"
+    # console.info "Will destroy carousel"
     @set 'shownElement', null
 
   runLater: null
@@ -80,6 +79,8 @@ App.SlideCarouselComponent = Ember.Component.extend
   prevSibling: ->
     shown = @get('shownElement')
     prevSibling = $(shown).prev()
+    if prevSibling.length == 0
+      prevSibling = @$('li:last')
     prevSibling
 
   nextSibling: ->
