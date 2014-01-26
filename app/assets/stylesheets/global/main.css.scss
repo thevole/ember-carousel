@@ -4,20 +4,19 @@
   height: 400px;
   li {
     list-style-type: none;
-    left: 110%;
+//    left: 110%;
     position: absolute;
+    opacity: 0;
     width: 100%;
+    left: 0;
     top: 0;
     z-index: 1;
-    &.animate {
-      -webkit-transition: left 2s;
-      transition: left 2s;
-    }
+    -webkit-transition: opacity 2s;
+    transition: opacity 2s;
+
     &.show {
-      left: 0;
-    }
-    &.front {
-      z-index: 99;
+//      left: 0;
+      opacity: 1;
     }
     img {
       width: 100%;

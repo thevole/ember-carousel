@@ -8,6 +8,8 @@ App.SlideCarouselComponent = Ember.Component.extend
 
   isPaused: false
 
+  showing: false
+
   pauseMode: (->
     if @get('isPaused') then "Play" else "Pause"
   ).property('isPaused')
@@ -17,19 +19,32 @@ App.SlideCarouselComponent = Ember.Component.extend
       @set 'isPaused', (not @get 'isPaused')
 
     nextSlide: ->
-      next = @nextSibling()
-      # @set 'isPaused', true
-      @clear_timer()
-      @showElement(next)
-      @nextElement()
+      unless @get 'showing'
+        @set 'showing', true
+        next = @nextSibling()
+        @set 'isPaused', true
+        @clear_timer()
+        @showElement(next)
+#        @nextElement()
+        @resetShowing(1000)
 
     prevSlide: ->
-      prev = @prevSibling()
-      # @set 'isPaused', true
-      @clear_timer()
-      @showElement(prev)
-      @nextElement()
+      unless @get 'showing'
+        @clear_timer()
+        @set 'showing', true
+        prev = @prevSibling()
+        @set 'isPaused', true
+        @showElement(prev)
+#        @nextElement()
+        @resetShowing(1000)
   }
+
+  resetShowing: (delay) ->
+    Ember.run.later(
+      this,
+      -> @set 'showing', false,
+      delay
+    )
 
   clear_timer: ->
     timer_id = @get 'runLater'
@@ -53,22 +68,14 @@ App.SlideCarouselComponent = Ember.Component.extend
 
 
   showElement: (newElementToShow) ->
-    # console.log "Showing #{$(newElementToShow).attr('id')}"
     oldElement = @get 'shownElement'
-    newElementToShow.addClass 'front animate show'
-    # console.log "Removing #{$(oldElement).attr('id')}"
+    newElementToShow.addClass 'show'
     @removeElement(oldElement)
     @set 'shownElement', newElementToShow
 
   removeElement: (oldElement) ->
     if oldElement?
-      oldElement.removeClass 'front'
-      Ember.run.later(
-        oldElement,
-        ->
-          @removeClass 'animate show' unless $('.show').length == 1
-        , @get('interval') * 0.6
-      )
+      oldElement.removeClass 'show' unless $('.show').length == 1
 
   willDestroyElement: ->
     # console.info "Will destroy carousel"
@@ -80,7 +87,7 @@ App.SlideCarouselComponent = Ember.Component.extend
     shown = @get('shownElement')
     prevSibling = $(shown).prev()
     if prevSibling.length == 0
-      prevSibling = @$('li:last')
+      prevSibling = @$('li[data-slide]').last()
     prevSibling
 
   nextSibling: ->
